@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/place_panel"
+    android:gravity="bottom"
+    app:umanoPanelHeight="120sp"
+    app:umanoOverlay="true"
+    app:umanoShadowHeight="0sp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/place_image"
+            android:src="@drawable/login_bg"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/semi_transparent_black_gradient"
+            android:alpha="1"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/place_slide_panel">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bgoverlay"
+            android:src="#fff"
+            android:alpha="0"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/place_title"
+                android:text="Chidambaram"
+                android:textColor="#fff"
+                android:textSize="30sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/place_rating"
+                android:layout_below="@id/place_title"
+                android:drawableLeft="@drawable/ic_star_black_24dp"
+                android:text="4.5"
+                android:textSize="12sp"
+                android:layout_marginTop="5sp"
+                android:layout_marginEnd="10sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/place_distance"
+                android:layout_below="@id/place_title"
+                android:layout_toRightOf="@id/place_rating"
+                android:drawableLeft="@drawable/ic_near_me_black_24dp"
+                android:text="72 KM"
+                android:textSize="12sp"
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="20sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/place_scroll_msg"
+                android:layout_below="@id/place_distance"
+                android:text="Slide up for more"
+                android:drawableStart="@drawable/ic_expand_less_black_24dp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="0sp"
+                android:textSize="14sp"
+                android:layout_marginBottom="24sp"/>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/place_scroll_msg">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    xmlns:android="http://schemas.android.com/apk/res/android">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" About this place"
+                        android:drawableLeft="@drawable/ic_local_offer_black_24dp"
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="5sp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/place_details"
+                        android:textColor="#000"
+                        android:text="It was erected as the capital of the Cholas by Rajendra Chola I, the son and successor of Rajaraja Chola, the great Chola who conquered a large area in South India, Sri Lanka, Bangladesh, Sumatra and Kadaram (Kedah in Malaysia) at the beginning of the 11th century A.D. As the capital of the Cholas from about 1025 A.D. for about 250 years, the city controlled the affairs of entire southern India, from the Tungabhadra in the north to Ceylon in the south and other South East Asian countries.
+The great temple of Siva at this place is next only to the Brihadisvara temple at Thanjavur in its monumental nature and surpasses it in sculptural quality. The Gangaikondaan temple is an architectural and engineering marvel because the shadow of the main tower never falls on the ground throughout the year."/>
+
+                </LinearLayout>
+            </ScrollView>
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="100sp"
+        android:id="@+id/icon_holder"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30sp">
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200sp"
+            android:id="@+id/user_icon"
+            android:scaleType="centerCrop"/>
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_name"
+        android:layout_below="@id/icon_holder"
+        android:layout_marginTop="15sp"
+        android:layout_centerHorizontal="true"
+        android:textSize="24sp"
+        android:textColor="#fff"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_id"
+        android:layout_below="@id/user_name"
+        android:layout_centerHorizontal="true"
+        android:textSize="12sp"/>
+    <com.facebook.login.widget.LoginButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50sp"/>
+
+</RelativeLayout>

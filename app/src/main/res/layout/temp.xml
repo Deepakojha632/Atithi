@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Address"
+        android:drawableLeft="@drawable/ic_location_on_black_24dp"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="5sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/place_address"
+        android:textColor="#000"
+        android:text="It was erected as the capital of the Cholas by Rajendra Chola I, the son and successor of Rajaraja Chola, the great Chola who conquered a large area in South India, Sri Lanka, Bangladesh, Sumatra and Kadaram (Kedah in Malaysia) at the beginning of the 11th century A.D. As the capital of the Cholas from about 1025 A.D. for about 250 years, the city controlled the affairs of entire southern India, from the Tungabhadra in the north to Ceylon in the south and other South East Asian countries."
+        android:layout_marginBottom="20sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" About this place"
+        android:drawableLeft="@drawable/ic_local_offer_black_24dp"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="5sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/place_details"
+        android:textColor="#000"
+        android:text="It was erected as the capital of the Cholas by Rajendra Chola I, the son and successor of Rajaraja Chola, the great Chola who conquered a large area in South India, Sri Lanka, Bangladesh, Sumatra and Kadaram (Kedah in Malaysia) at the beginning of the 11th century A.D. As the capital of the Cholas from about 1025 A.D. for about 250 years, the city controlled the affairs of entire southern India, from the Tungabhadra in the north to Ceylon in the south and other South East Asian countries.
+The great temple of Siva at this place is next only to the Brihadisvara temple at Thanjavur in its monumental nature and surpasses it in sculptural quality. The Gangaikondaan temple is an architectural and engineering marvel because the shadow of the main tower never falls on the ground throughout the year."/>
+
+</LinearLayout>

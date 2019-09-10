@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/bg"
+        android:src="@drawable/onboarding_screen_3"
+        android:scaleType="centerCrop"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/bgshadow"
+        android:src="#000"
+        android:alpha="0.6"
+        android:scaleType="centerCrop"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title3"
+        android:text="Allow us to serve you"
+        android:textSize="35sp"
+        android:textColor="#fff"
+        android:textAlignment="center"
+        android:layout_marginTop="100sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/description3"
+        android:text="To make your journey smoother, we need some permissions. Please click allow to the prompts"
+        android:textSize="16sp"
+        android:layout_marginStart="60sp"
+        android:textAlignment="center"
+        android:layout_centerInParent="true"/>
+    <Button
+        android:id="@+id/nextbtn3"
+        android:layout_width="wrap_content"
+        android:layout_height="30sp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20sp"
+        android:text="Next"
+        android:textSize="14sp"
+        android:background="#0000cd"
+        android:fadingEdge="vertical"/>
+</RelativeLayout>
