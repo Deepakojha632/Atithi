@@ -1,4 +1,4 @@
-package com.example.newapp;
+package com.example.newapp.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.newapp.R;
+import com.example.newapp.callbackinterface.HomeFragmentCallBack;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +26,8 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder
     private static final String TAG = "NearbyAdapter";
     private HomeFragmentCallBack homeFragmentCallBack;
 
+    String serverurl = "http://arnab882.heliohost.org";
+
     //vars
     private ArrayList<String> id = new ArrayList<String>();
     private ArrayList<String> title = new ArrayList<String>();
@@ -32,11 +36,14 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder
     private JSONArray arr;
     private Context mcontext;
 
-    public NearbyAdapter(Context mcontext, ArrayList<String> id, ArrayList<String> title, ArrayList<String> distance, ArrayList<String> rating, HomeFragmentCallBack h) {
-        this.id = id;
-        this.title = title;
-        this.distance = distance;
-        this.rating = rating;
+    public NearbyAdapter(Context mcontext, JSONArray jsonArray, HomeFragmentCallBack h) throws JSONException {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            this.id.add(jsonObject.get("place_id").toString());
+            this.title.add(jsonObject.get("place_name").toString());
+            this.distance.add(jsonObject.get("distance").toString());
+            this.rating.add(jsonObject.get("place_rating").toString());
+        }
         this.mcontext = mcontext;
         this.homeFragmentCallBack = h;
     }
@@ -52,7 +59,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder called");
-        String iconurl = "http://13.127.126.240/image/" + id.get(position) + ".jpeg";
+        String iconurl = serverurl + "/image/" + id.get(position) + ".jpeg";
         Glide.with(mcontext)
                 .asBitmap()
                 .load(iconurl)
@@ -60,6 +67,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder
         holder.title.setText(title.get(position));
         String str = distance.get(position) + " KM";
         holder.distance.setText(str);
+        holder.rating.setText(rating.get(position));
         holder.icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +83,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<NearbyAdapter.ViewHolder
     }
 
     //viewholder class
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView title, rating, distance;
 

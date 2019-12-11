@@ -1,4 +1,4 @@
-package com.example.newapp;
+package com.example.newapp.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.newapp.R;
 
 public class BotFragment extends Fragment {
 

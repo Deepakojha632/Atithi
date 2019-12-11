@@ -17,7 +17,7 @@
             android:textAlignment="center"
             android:layout_marginStart="5sp"
             android:layout_marginEnd="5sp"
-            android:layout_marginTop="200sp"
+            android:layout_marginTop="50sp"
             android:layout_marginBottom="5sp"/>
         <TextView
             android:layout_width="match_parent"
@@ -41,16 +41,128 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="@string/nearby_text"/>
+                android:text="@string/next_stop" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5sp"
+                android:layout_marginEnd="5sp">
+
+                <ImageView
+                    android:id="@+id/next_stop_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="180sp"
+                    android:scaleType="centerCrop" />
+                <!--ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="180sp"
+                    android:src="@drawable/white_background_overlay"/-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginEnd="10sp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/next_stop_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5sp"
+                        android:text="@string/app_name"
+                        android:textColor="#fff"
+                        android:textSize="18sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/next_stop_tags"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5sp"
+                            android:text="@string/app_name"
+                            android:textColor="#fff" />
+
+                        <TextView
+                            android:id="@+id/next_stop_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:drawableLeft="@drawable/ic_near_me_black_24dp"
+                            android:text="@string/app_name"
+                            android:textColor="#fff"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/next_stop_rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10sp"
+                            android:layout_toStartOf="@id/next_stop_distance"
+                            android:drawableLeft="@drawable/ic_star_black_24dp"
+                            android:textColor="#fff"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5sp"
+            android:layout_marginTop="10sp"
+            android:layout_marginEnd="5sp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recommended"
+                android:textSize="16sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"></androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:text="@string/nearby_text"
+                android:textSize="16sp" />
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/nearby"
                 android:orientation="horizontal">
-
             </androidx.recyclerview.widget.RecyclerView>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
+                android:text="@string/categories"
+                android:textSize="16sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+
         </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>

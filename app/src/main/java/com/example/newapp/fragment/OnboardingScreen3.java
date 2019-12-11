@@ -1,4 +1,4 @@
-package com.example.newapp;
+package com.example.newapp.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -9,9 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import com.example.newapp.R;
+import com.example.newapp.callbackinterface.OnboardingInterface;
 
 public class OnboardingScreen3 extends Fragment {
 
@@ -19,7 +23,7 @@ public class OnboardingScreen3 extends Fragment {
 
     private OnboardingInterface onboardingInterface;
 
-    void setOnboardingInterface(OnboardingInterface onboardingInterface){
+    public void setOnboardingInterface(OnboardingInterface onboardingInterface) {
         this.onboardingInterface = onboardingInterface;
     }
 
@@ -51,6 +55,8 @@ public class OnboardingScreen3 extends Fragment {
                             Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION
                     }, 2);
+                } else {
+                    onboardingInterface.deviceRegistered();
                 }
             }
         });

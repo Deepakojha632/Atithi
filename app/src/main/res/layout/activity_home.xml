@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Home">
+    tools:context=".activity.Home">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="#000"
-        android:alpha="0.3"/>
+        android:alpha="0.7" />
 
     <FrameLayout
         android:id="@+id/fragmentcontainer"

@@ -1,4 +1,4 @@
-package com.example.newapp;
+package com.example.newapp.fragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.newapp.R;
+import com.example.newapp.callbackinterface.OnboardingInterface;
 
 public class OnboardingScreen2 extends Fragment {
 

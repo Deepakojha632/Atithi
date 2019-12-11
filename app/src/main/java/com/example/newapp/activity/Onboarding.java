@@ -1,21 +1,20 @@
-package com.example.newapp;
+package com.example.newapp.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
-public class Onboarding extends AppCompatActivity implements OnboardingInterface{
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.newapp.R;
+import com.example.newapp.callbackinterface.OnboardingInterface;
+import com.example.newapp.fragment.OnboardingScreen1;
+import com.example.newapp.fragment.OnboardingScreen2;
+import com.example.newapp.fragment.OnboardingScreen3;
+
+public class Onboarding extends AppCompatActivity implements OnboardingInterface {
 
     private SharedPreferences sharedPreferences;
 
