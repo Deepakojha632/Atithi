@@ -1,7 +1,9 @@
 package com.example.newapp.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -27,6 +30,7 @@ import okhttp3.Response;
 
 public class PlacesByCategory extends AppCompatActivity implements PlaceByCategoryCallback {
     private String serverurl = "http://arnab882.heliohost.org";
+    private String TAG = "PlacesByCategories";
     private TextView name;
 
 
@@ -34,6 +38,7 @@ public class PlacesByCategory extends AppCompatActivity implements PlaceByCatego
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_by_category);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         name = findViewById(R.id.cat_name);
         initui();
 
@@ -52,7 +57,9 @@ public class PlacesByCategory extends AppCompatActivity implements PlaceByCatego
     }
 
     private void getPlaces(String category_id) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(1, TimeUnit.MINUTES).writeTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES);    // socket timeout
+        OkHttpClient client = builder.build();
         Request request = new Request.Builder()
                 .url(serverurl + "/getplacesbycategory.php?interest_id=" + category_id)
                 .build();
@@ -70,13 +77,16 @@ public class PlacesByCategory extends AppCompatActivity implements PlaceByCatego
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String data = response.body().string();
+                if (getApplicationContext() == null)
+                    return;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            showPlaces(data);
+                            if (data != null)
+                                showPlaces(data);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.e(TAG, e.getMessage());
                         }
                     }
                 });
@@ -86,7 +96,7 @@ public class PlacesByCategory extends AppCompatActivity implements PlaceByCatego
 
     private void showPlaces(String data) throws JSONException {
         JSONArray jsonArray = new JSONArray(data);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         RecyclerView recyclerView = findViewById(R.id.places);
         PlacesByCategoryAdapter adapter = new PlacesByCategoryAdapter(this, jsonArray, this);
         recyclerView.setLayoutManager(layoutManager);

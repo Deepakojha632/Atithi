@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -51,6 +52,7 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         runtime = PreferenceManager.getDefaultSharedPreferences(this);
 
         //checking internet connectivity
@@ -142,24 +144,24 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 try {
-                    //set runtime object with user's details
-                    runtimeeditor = runtime.edit();
-                    runtimeeditor.putString("userid", object.getString("id"));
-                    runtimeeditor.putString("first_name", object.getString("first_name"));
-                    runtimeeditor.putString("last_name", object.getString("last_name"));
-                    runtimeeditor.apply();
-                    Toast.makeText(Splash.this, "Logged in as: " + object.getString("first_name") + " " + object.getString("last_name"), Toast.LENGTH_SHORT).show();
-                    checkLocationPermission();
-
-                    //Start background service
-                    start_location_service();
-
-                    //call Home activity
-                    Intent i = new Intent(Splash.this, Home.class);
-                    startActivity(i);
+                    if (object != null) {
+                        //set runtime object with user's details
+                        runtimeeditor = runtime.edit();
+                        runtimeeditor.putString("userid", object.getString("id"));
+                        runtimeeditor.putString("first_name", object.getString("first_name"));
+                        runtimeeditor.putString("last_name", object.getString("last_name"));
+                        runtimeeditor.apply();
+                        Toast.makeText(Splash.this, "Logged in as: " + object.getString("first_name") + " " + object.getString("last_name"), Toast.LENGTH_SHORT).show();
+                        checkLocationPermission();
+                        //Start background service
+                        start_location_service();
+                        //call Home activity
+                        Intent i = new Intent(Splash.this, Home.class);
+                        startActivity(i);
+                        finish();
+                    }
                 } catch (JSONException | NullPointerException e) {
-                    Toast.makeText(getApplicationContext(), "Oops! Something went wrong!", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Oops! Something went wrong!" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -171,8 +173,7 @@ public class Splash extends AppCompatActivity {
 
     private void start_location_service() {
         //starting location tracking service
-        Intent i = new Intent(getApplicationContext(), Location_Service.class);
-        startService(i);
+        ContextCompat.startForegroundService(getApplicationContext(), new Intent(getApplicationContext(), Location_Service.class));
     }
 
     private void checkLocationPermission() {

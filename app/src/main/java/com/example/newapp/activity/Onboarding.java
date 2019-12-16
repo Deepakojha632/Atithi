@@ -2,6 +2,7 @@ package com.example.newapp.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,6 +24,7 @@ public class Onboarding extends AppCompatActivity implements OnboardingInterface
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         switchScreen(1);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
@@ -61,9 +63,7 @@ public class Onboarding extends AppCompatActivity implements OnboardingInterface
                 break;
             default:
                 Log.e("Onboarding", "Switch screen flag out of bound");
-
         }
-
     }
 
     @Override

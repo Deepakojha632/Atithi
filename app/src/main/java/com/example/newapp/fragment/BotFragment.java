@@ -17,21 +17,23 @@ public class BotFragment extends Fragment {
 
     private TextView t;
     private View v;
+    private static boolean isSelected = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bot_fragment, null);
         initUi();
+        isSelected = true;
         return v;
     }
 
-    private void initUi(){
+    private void initUi() {
         t = v.findViewById(R.id.maintext);
-        if (t != null){
+        if (t != null) {
             t.setText("Bot");
-        }else{
+        } else {
             Toast.makeText(v.getContext(), "Textview is null", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

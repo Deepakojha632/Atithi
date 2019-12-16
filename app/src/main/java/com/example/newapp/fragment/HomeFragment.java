@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +43,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -51,9 +53,10 @@ import okhttp3.Response;
 
 public class HomeFragment extends Fragment implements HomeFragmentCallBack {
     private String serverurl = "http://arnab882.heliohost.org";
-
+    private static boolean isSelected = false;
     private View v;
     private Context vcontext;
+    private CardView nextCard, recommendCard, nearbyCard, categoryCard;
     private TextView greeting, textViewlocation, nextstoptitle, nextstopdistance, nextstoptags, nextstoprating;
     private ImageView nextstopimage;
     private String TAG = "HomeFragment";
@@ -61,7 +64,6 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
     private LocationManager locationManager;
     private LocationListener l;
     private HomeActivityCallback callBackInterface;
-
     private String userid, firstname, lastname;
     private JSONObject userdata;
 
@@ -82,8 +84,13 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
         nextstopdistance = v.findViewById(R.id.next_stop_distance);
         nextstoptags = v.findViewById(R.id.next_stop_tags);
         nextstoprating = v.findViewById(R.id.next_stop_rating);
+        nextCard = v.findViewById(R.id.next_card);
+        recommendCard = v.findViewById(R.id.recommended_card);
+        nearbyCard = v.findViewById(R.id.nearby_card);
+        categoryCard = v.findViewById(R.id.category_card);
         Log.e(TAG, "onCreateView: ");
         initUi();
+        isSelected = true;
         return v;
     }
 
@@ -186,7 +193,9 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
     }
 
     private void getNearby(Location location) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(1, TimeUnit.MINUTES).writeTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES);    // socket timeout
+        OkHttpClient client = builder.build();
         Request request = new Request.Builder()
                 .url(serverurl + "/getnearby.php?lat=" + location.getLatitude() + "&lon=" + location.getLongitude())
                 .addHeader("Accept", "application/json; q=0.5")
@@ -204,20 +213,23 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
                 } catch (NullPointerException ne) {
                     ne.printStackTrace();
                 }
-
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String data = response.body().string();
                 Log.e(TAG, "onResponse: " + data);
+                if (getActivity() == null)
+                    return;
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            showNearby(data);
+                            if (data != null)
+                                showNearby(data);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.e(TAG, e.getMessage());
                         }
                     }
                 });
@@ -238,7 +250,9 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
     }
 
     private void getRecommended(String userid, Location location) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(1, TimeUnit.MINUTES).writeTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES);    // socket timeout
+        OkHttpClient client = builder.build();
         final String[] data = new String[1];
         final Request request = new Request.Builder()
                 .url(serverurl + "/getrecommendation.php?userid=" + userid + "&lat=" + location.getLatitude() + "&lon=" + location.getLongitude())
@@ -247,7 +261,7 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e(TAG, "onFailure: e.printStackTrace()");
+                Log.e(TAG, e.getMessage());
             }
 
             @Override
@@ -256,11 +270,15 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
                 try {
                     data[0] = response.body().string();
                     System.out.println(data[0]);
+                    if (getActivity() == null)
+                        return;
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
-                                showRecommended(data[0]);
+                                if (data[0] != null)
+                                    showRecommended(data[0]);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -271,7 +289,6 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
                 }
             }
         });
-        //return data[0];
     }
 
     private void showRecommended(String data) throws JSONException {
@@ -307,6 +324,8 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
                     @Override
                     public void onClick(View view) {
                         try {
+                            if (getActivity() == null)
+                                return;
                             callBackInterface.showPlaceDetails(Integer.parseInt(nextstop.get("place_id").toString()));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -321,14 +340,15 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(layoutManager);
             }
-
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
     }
 
     private void getCategories() {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(5, TimeUnit.MINUTES).writeTimeout(5, TimeUnit.MINUTES).readTimeout(30, TimeUnit.SECONDS);    // socket timeout
+        OkHttpClient client = builder.build();
         final Request request = new Request.Builder()
                 .url(serverurl + "/getcategories.php")
                 .addHeader("Accept", "application/json; q=0.5")
@@ -342,13 +362,18 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String data = response.body().string();
+                Log.i(TAG, "Category: " + data);
+                if (getActivity() == null)
+                    return;
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            showCategories(data);
+                            if (data != null)
+                                showCategories(data);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.e(TAG, e.getMessage());
                         }
                     }
                 });
@@ -363,5 +388,6 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
         CategoryAdapter adapter = new CategoryAdapter(jsonArray, this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
     }
 }

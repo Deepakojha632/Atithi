@@ -30,6 +30,7 @@ import java.io.File;
 
 
 public class UserFragment extends Fragment {
+
     AccessTokenTracker tokenTracker = new AccessTokenTracker() {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
@@ -39,6 +40,7 @@ public class UserFragment extends Fragment {
             }
         }
     };
+    private static boolean isSelected = false;
     private ImageView icon, fullView;
     private TextView username, userid, gender;
     private boolean fullScreen;
@@ -78,6 +80,7 @@ public class UserFragment extends Fragment {
                 loginButton.setVisibility(View.VISIBLE);
             }
         });
+        isSelected = true;
         return v;
     }
 
@@ -111,8 +114,7 @@ public class UserFragment extends Fragment {
             Toast.makeText(getContext(), "Thank You for your visit! Hope to see you soon", Toast.LENGTH_LONG).show();
             Intent i = new Intent(this.getContext(), LoginActivity.class);
             startActivity(i);
-            //getActivity().finishAffinity();
-            //System.exit(0);
+            getActivity().finish();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

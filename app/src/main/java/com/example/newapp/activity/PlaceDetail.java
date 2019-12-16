@@ -1,19 +1,30 @@
 package com.example.newapp.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
 import com.example.newapp.R;
@@ -25,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,9 +44,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class PlaceDetail extends AppCompatActivity {
+public class PlaceDetail extends AppCompatActivity implements View.OnClickListener {
     String serverurl = "http://arnab882.heliohost.org";
     private RelativeLayout panelbg;
+    private static String dest = "";
+    FrameLayout.LayoutParams params;
     private ImageView bgoverlay, bgimage;
     private TextView placetitle, placerating, placedistance, placedetails, placetags;
     //private Button nav, rating;
@@ -43,28 +57,34 @@ public class PlaceDetail extends AppCompatActivity {
     private LocationListener locationListener;
     private String TAG = "PlaceDetail";
     private int place_id;
+    private ImageButton navigateBtn;
+    private CardView placePic, slidingPane, placeImageHolder;
 
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_detail2);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         placetitle = findViewById(R.id.place_title);
         placerating = findViewById(R.id.place_rating);
         placedistance = findViewById(R.id.place_distance);
         placedetails = findViewById(R.id.place_details);
+        placePic = findViewById(R.id.place_pic);
         placetags = findViewById(R.id.tags);
         bgimage = findViewById(R.id.place_image);
-        //nav = findViewById(R.id.navigation);
-        //rating = findViewById(R.id.rating);
-
+        slidingPane = findViewById(R.id.slidingPane);
+        navigateBtn = findViewById(R.id.navigation);
+        bgoverlay = findViewById(R.id.bgoverlay);
+        panelbg = findViewById(R.id.place_slide_panel);
+        placeImageHolder = findViewById(R.id.place_image_holder);
+        params = (FrameLayout.LayoutParams) placeImageHolder.getLayoutParams();
+        placePic.setCardBackgroundColor(Color.TRANSPARENT);
 
         //getting values passed to this intent
         place_id = getIntent().getIntExtra("placeid", 0);
         SlidingUpPanelLayout slidingUpPanelLayout = findViewById(R.id.place_panel);
-        bgoverlay = findViewById(R.id.bgoverlay);
-        panelbg = findViewById(R.id.place_slide_panel);
 
         //set content background
         panelbg.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -75,6 +95,7 @@ public class PlaceDetail extends AppCompatActivity {
                 setImageHeight(h, w);
             }
         });
+        navigateBtn.setOnClickListener(this);
 
         //get current location
         Log.e(TAG, "onCreate: initialising location manager");
@@ -87,8 +108,6 @@ public class PlaceDetail extends AppCompatActivity {
                 Log.e(TAG, "onLocationChanged: " + location.toString());
                 locationManager.removeUpdates(locationListener);
                 getInfo(location);
-                //fetchdata f = new fetchdata();
-                //f.execute();
             }
 
             @Override
@@ -121,12 +140,19 @@ public class PlaceDetail extends AppCompatActivity {
                     placetitle.setTextColor(Color.parseColor("#ffffff"));
                     placerating.setTextColor(Color.parseColor("#ffffff"));
                     placedistance.setTextColor(Color.parseColor("#ffffff"));
+                    slidingPane.setAlpha(1f);
                     slidemsg.setVisibility(View.VISIBLE);
+                    if (params.gravity == Gravity.TOP)
+                        slideDownAnimation();
+
                 } else {
                     placetitle.setTextColor(Color.parseColor("#000000"));
                     placerating.setTextColor(Color.parseColor("#000000"));
                     placedistance.setTextColor(Color.parseColor("#000000"));
+                    slidingPane.setAlpha(slideOffset);
                     slidemsg.setVisibility(View.GONE);
+                    if (params.gravity == Gravity.CENTER)
+                        slideUpAnimation();
                 }
             }
 
@@ -137,19 +163,57 @@ public class PlaceDetail extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+    private void slideUpAnimation() {
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 0, -480);
+        animation.setDuration(300);
+        animation.setFillAfter(false);
+        animation.setAnimationListener(new MyAnimationListener());
+        placeImageHolder.startAnimation(animation);
+    }
+
+    private void slideDownAnimation() {
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 480);
+        animation.setDuration(300);
+        animation.setFillAfter(false);
+        animation.setAnimationListener(new DownAnimationListener());
+        placeImageHolder.startAnimation(animation);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
+    public void onClick(View v) {
+        if (v.getId() == R.id.navigation) {
+            String address = placetitle.getText().toString();
+            if (!address.equalsIgnoreCase("Atithi")) {
+                String locAdd = PlaceDetail.dest;
+                String[] latLong = locAdd.split(":");
+                Log.e(TAG, "latitude:longitude: " + latLong[0] + ":" + latLong[1]);
+                /*String[] location = locAdd.split(" ");
+                System.out.println("Length of Address: " + location.length);
+                for (String i : location) {
+                    System.out.print(i + " ");
+                }*/
 
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("https")
+                        .authority("www.google.com")
+                        .appendPath("maps")
+                        .appendPath("dir")
+                        .appendPath("")
+                        .appendQueryParameter("api", "1")
+                        .appendQueryParameter("destination", latLong[0] + "," + latLong[1]);
+                String url = builder.build().toString();
+                Log.d("Directions", url);
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        }
+    }
 
     private void getInfo(Location location) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(1, TimeUnit.MINUTES).writeTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES);    // socket timeout
+        OkHttpClient client = builder.build();
         Request request = new Request.Builder()
                 .url(serverurl + "/getplacedetail.php?place_id=" + place_id + "&lat=" + location.getLatitude() + "&lon=" + location.getLongitude())
                 .build();
@@ -163,13 +227,20 @@ public class PlaceDetail extends AppCompatActivity {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String data = response.body().string();
                 Log.e(TAG, "onResponse: " + data);
+                if (getApplicationContext() == null)
+                    return;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            loadUi(data);
+                            if (data != null) {
+                                loadUi(data);
+                                String address = placetitle.getText().toString();
+                                GeocodingLocation locationAddress = new GeocodingLocation();
+                                GeocodingLocation.getAddressFromLocation(address, getApplicationContext(), new GeocoderHandler());
+                            }
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.e(TAG, e.getMessage());
                         }
                     }
                 });
@@ -203,10 +274,60 @@ public class PlaceDetail extends AppCompatActivity {
             tag = String.valueOf(temp);
             tags += tag;
             placetags.setText(tags);
-            Glide.with(this)
+            Glide.with(getApplicationContext())
                     .asBitmap()
                     .load(serverurl + "/image/" + place_id + ".jpeg")
                     .into(bgimage);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private class MyAnimationListener implements Animation.AnimationListener {
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            placeImageHolder.clearAnimation();
+            if (params.gravity == Gravity.CENTER) {
+                params.gravity = Gravity.TOP;
+                placeImageHolder.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+    }
+
+    private class DownAnimationListener implements Animation.AnimationListener {
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            placeImageHolder.clearAnimation();
+            if (params.gravity == Gravity.TOP) {
+                params.gravity = Gravity.CENTER;
+                placeImageHolder.setLayoutParams(params);
+            }
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationStart(Animation animation) {
         }
     }
 
@@ -216,4 +337,19 @@ public class PlaceDetail extends AppCompatActivity {
         bgoverlay.setLayoutParams(p);
     }
 
+    private class GeocoderHandler extends Handler {
+        @Override
+        public void handleMessage(Message message) {
+            String locationAddress;
+            switch (message.what) {
+                case 1:
+                    Bundle bundle = message.getData();
+                    locationAddress = bundle.getString("address");
+                    break;
+                default:
+                    locationAddress = null;
+            }
+            PlaceDetail.dest = locationAddress;
+        }
+    }
 }

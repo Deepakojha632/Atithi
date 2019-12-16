@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Atithi</string>
     <string name="action_settings">Settings</string>
-    <string name="facebook_app_id">571485113677927</string>
-    <string name="fb_login_protocol_scheme">fb571485113677927</string>
+    <string name="facebook_app_id">403651563616178</string>
+    <string name="fb_login_protocol_scheme">fb403651563616178</string>
     <string name="title_activity_home">Home</string>
     <string name="title_home">Home</string>
     <string name="title_bot">Ask Us</string>

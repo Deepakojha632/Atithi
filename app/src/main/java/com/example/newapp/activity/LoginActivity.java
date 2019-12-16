@@ -3,6 +3,7 @@ package com.example.newapp.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import org.json.JSONObject;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -47,10 +49,9 @@ import okhttp3.ResponseBody;
 //import androidx.appcompat.widget.Toolbar;
 //import android.view.MenuItem;
 
-
 public class LoginActivity extends AppCompatActivity {
     String TAG = "LoginActivity";
-
+    LoginActivity loginActivity;
     CallbackManager callbackManager;
     private SharedPreferences sharedPreferences;
 
@@ -70,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         //initialize objects
         callbackManager = CallbackManager.Factory.create();
@@ -200,7 +202,7 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject object;
                 try {
                     object = new JSONObject(responseBody.string());
-                    Log.e(TAG, "onResponse: " + object.toString());
+                    Log.e(TAG, "onResponse oncheckregistration: " + object.toString());
                     if ((boolean) object.get("registered")) {
                         //user registered
                         Log.e(TAG, "onCompleted2: user registered");
@@ -221,7 +223,9 @@ public class LoginActivity extends AppCompatActivity {
     private void registerUser() {
         //register newly logged in user
         Log.e(TAG, "registerUser: " + AccessToken.getCurrentAccessToken().getToken());
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(1, TimeUnit.MINUTES).writeTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES);    // socket timeout
+        OkHttpClient client = builder.build();
         RequestBody body = new FormBody.Builder()
                 .add("token", AccessToken.getCurrentAccessToken().getToken())
                 .build();
@@ -238,7 +242,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String resp = response.body().string();
-                Log.d(TAG, "onResponse: " + resp);
+                Log.d(TAG, "registerUser onResponse : " + resp);
                 if (response.code() == 200) {
                     start_location_service();
                     Intent i = new Intent(LoginActivity.this, Home.class);

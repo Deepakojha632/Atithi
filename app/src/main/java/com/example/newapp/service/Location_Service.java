@@ -115,7 +115,7 @@ public class Location_Service extends Service {
                 fos.write(data.getBytes());
                 fos.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
         } else {
             try {
@@ -150,6 +150,7 @@ public class Location_Service extends Service {
                 .setSmallIcon(R.drawable.ic_explore)
                 .setContentIntent(pendingIntent)
                 .build();
+        //notification.flags = Notification.FLAG_AUTO_CANCEL;
         startForeground(1, notification);
     }
 
