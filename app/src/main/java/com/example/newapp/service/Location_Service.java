@@ -127,18 +127,6 @@ public class Location_Service extends Service {
                 e.printStackTrace();
             }
         }
-//        try{
-//            StringBuilder data = new StringBuilder();
-//            BufferedReader reader = new BufferedReader(new FileReader(file));
-//            String line = "";
-//            while ((line = reader.readLine()) != null){
-//                data.append(line);
-//            }
-//            reader.close();
-//            Log.d(TAG, "onLocationChanged: filedata: "+data);
-//        } catch (IOException e){
-//            e.printStackTrace();
-//        }
     }
 
     private void showPersistentNotification() {
@@ -150,7 +138,7 @@ public class Location_Service extends Service {
                 .setSmallIcon(R.drawable.ic_explore)
                 .setContentIntent(pendingIntent)
                 .build();
-        //notification.flags = Notification.FLAG_AUTO_CANCEL;
+        notification.flags = Notification.FLAG_AUTO_CANCEL;
         startForeground(1, notification);
     }
 

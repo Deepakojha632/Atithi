@@ -31,7 +31,7 @@ public class BotFragment extends Fragment {
     private void initUi() {
         t = v.findViewById(R.id.maintext);
         if (t != null) {
-            t.setText("Bot");
+            t.setText("Ask Us");
         } else {
             Toast.makeText(v.getContext(), "Textview is null", Toast.LENGTH_SHORT).show();
         }
