@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.example.newapp.R;
-import com.example.newapp.activity.Splash;
+import com.example.newapp.activity.Home;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -130,12 +130,14 @@ public class Location_Service extends Service {
     }
 
     private void showPersistentNotification() {
-        Intent intent = new Intent(this, Splash.class);
+        Intent intent = new Intent(this, Home.class);
+        NotificationManager nManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Atithi at your service")
                 .setContentText("Tap to open the app")
                 .setSmallIcon(R.drawable.ic_explore)
+                .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .build();
         notification.flags = Notification.FLAG_AUTO_CANCEL;
@@ -149,7 +151,7 @@ public class Location_Service extends Service {
                     "Atithi",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            NotificationManager manager = getSystemService(NotificationManager.class);
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             if (manager != null) {
                 manager.createNotificationChannel(notificationChannel);
             }

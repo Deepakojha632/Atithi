@@ -14,10 +14,12 @@ import com.example.newapp.callbackinterface.OnboardingInterface;
 import com.example.newapp.fragment.OnboardingScreen1;
 import com.example.newapp.fragment.OnboardingScreen2;
 import com.example.newapp.fragment.OnboardingScreen3;
+import com.google.android.material.appbar.AppBarLayout;
 
 public class Onboarding extends AppCompatActivity implements OnboardingInterface {
 
     private SharedPreferences sharedPreferences;
+    private AppBarLayout appBarLayout;
 
 
     @Override
@@ -32,8 +34,7 @@ public class Onboarding extends AppCompatActivity implements OnboardingInterface
 
     @Override
     public void switchScreen(int flag) {
-        switch (flag)
-        {
+        switch (flag) {
             case 1:
                 //switch to first screen
                 OnboardingScreen1 screen1 = new OnboardingScreen1();

@@ -38,7 +38,7 @@
         android:id="@+id/slidingPane"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#0FFFFFFF"
+        app:cardBackgroundColor="#12FDFCFC"
         app:cardCornerRadius="20sp"
         app:cardElevation="0sp">
 

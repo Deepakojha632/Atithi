@@ -1,62 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/onboarding_screen_2"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/onboarding_screen_2" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="#000"
-        android:alpha="0.6"/>
+        android:alpha="0.6"
+        android:src="#000" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100sp"
-        android:orientation="vertical"
         android:layout_alignParentBottom="false"
-        android:layout_marginBottom="100sp">
+        android:layout_marginTop="100sp"
+        android:layout_marginBottom="100sp"
+        android:orientation="vertical">
+
         <TextView
+            android:id="@+id/title2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/title2"
             android:text="Welcome to"
-            android:textSize="30sp"
+            android:textAlignment="center"
             android:textColor="#fff"
-            android:textAlignment="center"/>
+            android:textSize="30sp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/title2"
             android:text="Pondicherry"
-            android:textSize="50sp"
+            android:textAlignment="center"
             android:textColor="#fff"
-            android:textAlignment="center"/>
+            android:textSize="50sp" />
 
     </RelativeLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="We will be your guide, companion and friend throughout the journey."
-        android:textSize="16sp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="150sp"
         android:layout_marginStart="20sp"
         android:layout_marginEnd="20sp"
-        android:textAlignment="center" />
-    <Button
-        android:id="@+id/nextbtn2"
+        android:layout_marginBottom="150sp"
+        android:text="We will be your guide, companion and friend throughout the journey."
+        android:textAlignment="center"
+        android:textSize="16sp" />
+
+    <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
-        android:layout_height="30sp"
-        android:layout_centerInParent="true"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
         android:layout_margin="20sp"
-        android:text="Next"
-        android:textSize="14sp"
-        android:background="#0000cd"
-        android:fadingEdge="vertical"/>
+        android:fadingEdge="vertical"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="10dp">
+
+        <Button
+            android:id="@+id/nextbtn2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#1E88E5"
+            android:fadingEdge="vertical"
+            android:text="Next"
+            android:textSize="14sp" />
+    </androidx.cardview.widget.CardView>
+
 </RelativeLayout>

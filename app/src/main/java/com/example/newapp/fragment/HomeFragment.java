@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
                     city += addresses.get(0).getLocality();
                     textViewlocation.setText(city);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage());
                 }
                 locationManager.removeUpdates(l);
                 getRecommended(userid, location);
@@ -280,12 +280,12 @@ public class HomeFragment extends Fragment implements HomeFragmentCallBack {
                                 if (data[0] != null)
                                     showRecommended(data[0]);
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.e(TAG, "Get recommendation" + e.getMessage());
                             }
                         }
                     });
                 } catch (NullPointerException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Get recommendation" + e.getMessage());
                 }
             }
         });

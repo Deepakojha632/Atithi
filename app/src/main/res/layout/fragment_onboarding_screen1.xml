@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/onboarding_screen_1"
-        android:scaleType="centerCrop"/>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/onboarding_overlay"
+        android:contentDescription="@string/todo"
         android:scaleType="centerCrop"
-        android:alpha="0.9"/>
+        android:src="@drawable/onboarding_screen_1" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.9"
+        android:contentDescription="@string/todo"
+        android:scaleType="centerCrop"
+        android:src="@drawable/onboarding_overlay" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="false"
-        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80sp">
+        android:layout_centerInParent="false"
+        android:layout_marginBottom="80sp"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pt_sans"
-            android:text="Hello!"
+            android:text="@string/hello"
             android:textAlignment="center"
             android:textColor="#000"
             android:textSize="70sp"
@@ -39,20 +44,31 @@
             android:layout_below="@id/title1"
             android:layout_marginStart="30sp"
             android:layout_marginEnd="30sp"
-            android:text="We are glad to have you with us. Please click next to continue."
+            android:text="@string/we_are_glad_to_have_you_with_us_please_click_next_to_continue"
             android:textAlignment="center"
             android:textColor="#000"
             android:textSize="16sp" />
+
     </RelativeLayout>
-    <Button
-        android:id="@+id/nextbtn1"
+
+    <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
-        android:layout_height="30sp"
-        android:layout_centerInParent="true"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
         android:layout_margin="20sp"
-        android:text="Next"
-        android:textSize="14sp"
-        android:background="#0000cd"
-        android:fadingEdge="vertical"/>
+        android:fadingEdge="vertical"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="10dp">
+
+        <Button
+            android:id="@+id/nextbtn1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#1E88E5"
+            android:text="@string/next"
+            android:textSize="14sp" />
+
+    </androidx.cardview.widget.CardView>
+
 </RelativeLayout>

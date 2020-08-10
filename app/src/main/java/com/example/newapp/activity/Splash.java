@@ -1,6 +1,7 @@
 package com.example.newapp.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,6 +48,14 @@ public class Splash extends AppCompatActivity {
     private SharedPreferences runtime;
     private SharedPreferences.Editor runtimeeditor;
     private String TAG = "Splash";
+    private static boolean result = false;
+    private static AlertDialog alertDialog;
+
+    private static boolean isConnectionAvailable(Context context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        return info != null && manager.getActiveNetworkInfo().isConnected();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,78 +65,59 @@ public class Splash extends AppCompatActivity {
         runtime = PreferenceManager.getDefaultSharedPreferences(this);
 
         //checking internet connectivity
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo info = manager.getActiveNetworkInfo();
-
-        if (info == null) {
-            new AlertDialog.Builder(this)
-                    .setTitle(getResources().getString(R.string.app_name))
-                    .setMessage("It seems you dont have internet connection. Please connect to the internet and restart the app.")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Splash splash = new Splash();
-                            splash.finishAffinity();
-                            System.exit(0);
-                            //finish();
-                        }
-                    }).show();
+        final AlertDialog.Builder b = new AlertDialog.Builder(this);
+        if (!InternetConnection.checkConnection(getApplicationContext())) {
+            b.setCancelable(false);
+            b.setTitle(getResources().getString(R.string.app_name));
+            b.setMessage("It seems you dont have internet connection. Please connect to the internet and retry.");
+            b.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (InternetConnection.checkConnection(getApplicationContext())) {
+                        //post activity data to server
+                        postActivityToServer();
+                        //check if device is registered
+                        checkDeviceRegistration();
+                    } else {
+                        alertDialog = b.create();
+                        alertDialog.show();
+                    }
+                }
+            });
+            b.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Splash splash = new Splash();
+                    splash.finishAffinity();
+                    System.exit(0);
+                }
+            });
+            alertDialog = b.create();
+            alertDialog.show();
         } else {
             //post activity data to server
-            final File file = new File(getFilesDir(), "activity");
-            if (file.exists()) {
-                try {
-                    String data = "";
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        data += line;
-                    }
-                    reader.close();
-                    OkHttpClient client = new OkHttpClient();
-                    RequestBody formbody = new FormBody.Builder()
-                            .add("activity", data)
-                            .build();
-                    Request request = new Request.Builder()
-                            .url(serverurl + "/trackactivity.php")
-                            .post(formbody)
-                            .build();
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Log.d(TAG, "onFailure: Call failed");
-                        }
-
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            String resp = response.body().string();
-                            Log.d(TAG, "onResponse: " + resp);
-                            if (Integer.parseInt(resp) == 1) {
-                                file.delete();
-                            }
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            postActivityToServer();
 
             //check if device is registered
-            if (runtime.getBoolean("registered", false)) {
-                //device already registered
-                if (checkLogin()) {
-                    //true means user has already logged in
-                    loginSuccessful(AccessToken.getCurrentAccessToken());
-                } else {
-                    //user not logged in. call login activity
-                    Intent i = new Intent(this, LoginActivity.class);
-                    startActivity(i);
-                }
+            checkDeviceRegistration();
+        }
+    }
+
+    private void checkDeviceRegistration() {
+        if (runtime.getBoolean("registered", false)) {
+            //device already registered
+            if (checkLogin()) {
+                //true means user has already logged in
+                loginSuccessful(AccessToken.getCurrentAccessToken());
             } else {
-                //device not registered. call onboarding activity
-                Intent i = new Intent(this, Onboarding.class);
+                //user not logged in. call login activity
+                Intent i = new Intent(this, LoginActivity.class);
                 startActivity(i);
             }
+        } else {
+            //device not registered. call onboarding activity
+            Intent i = new Intent(this, Onboarding.class);
+            startActivity(i);
         }
     }
 
@@ -189,6 +179,46 @@ public class Splash extends AppCompatActivity {
         }
     }
 
+    private void postActivityToServer() {
+        final File file = new File(getFilesDir(), "activity");
+        if (file.exists()) {
+            try {
+                String data = "";
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    data += line;
+                }
+                reader.close();
+                OkHttpClient client = new OkHttpClient();
+                RequestBody formbody = new FormBody.Builder()
+                        .add("activity", data)
+                        .build();
+                Request request = new Request.Builder()
+                        .url(serverurl + "/trackactivity.php")
+                        .post(formbody)
+                        .build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.d(TAG, "onFailure: Call failed");
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resp = response.body().string();
+                        Log.d(TAG, "onResponse: " + resp);
+                        if (Integer.parseInt(resp) == 1) {
+                            file.delete();
+                        }
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     //Handling permission request prompt result
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -201,4 +231,34 @@ public class Splash extends AppCompatActivity {
             }
         }
     }
+
+    /*public static boolean showNoConnectionDialog(final Context c) {
+        if (isConnectionAvailable(c)) {
+            result = true;
+            return result;
+        } else {
+            Splash.b.setTitle("No Connection");
+            Splash.b.setMessage("Cannot connect to the internet!");
+            Splash.b.setPositiveButton("Retry", new AlertDialog.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (!isConnectionAvailable(c))
+                        showNoConnectionDialog(c);
+                    else {
+                        result = true;
+                    }
+                }
+            });
+            Splash.b.setNegativeButton("Exit", new AlertDialog.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    ((Activity) c).finish();
+                }
+            });
+            Splash.alertDialog = Splash.b.create();
+            Splash.alertDialog.show();
+        }
+        return result;
+    }*/
 }

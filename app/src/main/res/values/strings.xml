@@ -11,6 +11,10 @@
     <string name="recommended">Recommeded for you:</string>
     <string name="next_stop">Your next destination:</string>
     <string name="categories">Categories:</string>
+    <string name="hello">Hello!</string>
+    <string name="we_are_glad_to_have_you_with_us_please_click_next_to_continue">We are glad to have you with us. Please click next to continue.</string>
+    <string name="next">Next</string>
+    <string name="todo">TODO</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
