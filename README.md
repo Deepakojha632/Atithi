@@ -2,7 +2,7 @@
 A tourism application for pondicherry **(NIC Project)**
 - Shows lists of tourist places available in pondicherry.
 - Recommends tourism places based on tourist interest.
-- Category based tourist place options.
+- Category based tourist places option.
 - Short detail of place with picture
 - Real time distance info.
 - Navigate place on google map with one click.
