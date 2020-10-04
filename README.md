@@ -1,3 +1,3 @@
 # Atithi
-A tourism app for pondicherry
-NIC Project
+A tourism application for pondicherry
+(NIC Project)
