@@ -6,5 +6,4 @@ A tourism application for pondicherry **(NIC Project)**
 - Short detail of place with picture
 - Real time distance info.
 - Navigate place on google map with one click.
-- Profile section that shows tourist info like:- Name, Id.
-
+- Profile section that shows tourist info like:- Name, Id, Profile Picture.
